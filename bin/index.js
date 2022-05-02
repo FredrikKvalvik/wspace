@@ -1,7 +1,10 @@
 #! /usr/bin/env node
 
-const yargs = require("yargs");
 const utils = require("./utils")
+const config = require("../config")
+
+const yargs = require("yargs");
+
 
 const usage = "\nUsage: tran <lang_name> sentence to be translated";
 const options = yargs
@@ -15,8 +18,4 @@ const options = yargs
   .help(true)
   .argv;
 
-
-  if(yargs.argv._[0] == null){
-    utils.log("hallais")
-  }
-
+  console.log(utils.getAllWorkSpaces("/Users/fredrikkvalvik/repos"))
