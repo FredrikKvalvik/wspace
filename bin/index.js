@@ -18,4 +18,6 @@ const options = yargs
   .help(true)
   .argv;
 
-  console.log(utils.getAllWorkSpaces("/Users/fredrikkvalvik/repos"))
+const workPlaces = utils.getAllWorkSpaces("/Users/fredrikkvalvik/repos")
+console.log(workPlaces)
+utils.openEditor(utils.findWorkSpace(workPlaces, "craft-headless-test"))
