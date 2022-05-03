@@ -10,7 +10,7 @@ const getAllWorkSpaces = function (dirPath, workSpaces = [], currentFolder = nul
   if (files.includes("package.json" || "composer.json" || ".wspace")) {
     workSpacesList.push({
       path: dirPath,
-      workPlace: currentFolder
+      workSpace: currentFolder
     })
   } else {
     files.forEach((file) => {
@@ -24,11 +24,10 @@ const getAllWorkSpaces = function (dirPath, workSpaces = [], currentFolder = nul
 }
 
 const findWorkSpace = (wpList, wpName) => {
-  const ws = wpList.find(workPlace => workPlace.workPlace == wpName)
-  return ws
+  return wpList.find(ws => ws.workPlace == wpName)
 }
 
-const openEditor = ({ path }) => {
+const openEditor = (path) => {
   const options = {
     shell: "/bin/zsh",
     windowsHide: "true",
