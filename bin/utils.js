@@ -1,10 +1,10 @@
-const fs = require("fs")
-const { exec } = require("child_process")
+import fs from "fs"
+import { exec } from "child_process"
 
-const config = require("../config")
+import config from "../config.js"
 
-const getAllWorkSpaces = function (dirPath, workSpaces = [], currentFolder = null) {
-  files = fs.readdirSync(dirPath).filter(file => file !== "node_modules")
+const getWorkSpaces = function (dirPath, workSpaces = [], currentFolder = null) {
+  const files = fs.readdirSync(dirPath).filter(file => file !== "node_modules")
 
   let workSpacesList = workSpaces
   if (files.includes("package.json" || "composer.json" || ".wspace")) {
@@ -15,19 +15,24 @@ const getAllWorkSpaces = function (dirPath, workSpaces = [], currentFolder = nul
   } else {
     files.forEach((file) => {
       if (fs.statSync(dirPath + "/" + file).isDirectory()) {
-        getAllWorkSpaces(dirPath + "/" + file, workSpacesList, file)
+        getWorkSpaces(dirPath + "/" + file, workSpacesList, file)
       }
     })
   }
 
   return workSpacesList
 }
+export const getAllWorkSpaces = wsList => {
+  const fullList = []
+  wsList.forEach(ws => fullList.push(...getWorkSpaces(ws)))
+  return fullList
+}
 
-const findWorkSpace = (wpList, wpName) => {
+export const findWorkSpace = (wpList, wpName) => {
   return wpList.find(ws => ws.workPlace == wpName)
 }
 
-const openEditor = (path) => {
+export const openEditor = (path) => {
   const options = {
     shell: "/bin/zsh",
     windowsHide: "true",
@@ -36,8 +41,12 @@ const openEditor = (path) => {
   exec(`${config.defaultEditor} ${path}`, options)
 }
 
-module.exports = {
-  getAllWorkSpaces,
-  openEditor,
-  findWorkSpace,
+export const ls = () => {
+  const wsList = getAllWorkSpaces(config.workspaceDirectories)
+  console.log("==========")
+  wsList.forEach(ws => {
+    console.log("Name:", ws.workSpace)
+    console.log("Path:", ws.path)
+    console.log("==========")
+  })
 }

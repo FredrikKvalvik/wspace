@@ -9,6 +9,7 @@
   "keywords": [],
   "author": "Fredrik Kvalvik",
   "license": "ISC",
+  "type":"module",
   "bin": {
     "wspace": "./bin/index.js"
   },
