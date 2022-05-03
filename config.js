@@ -5,7 +5,9 @@ const config = {
     process.env.HOME + "/repos"
   ],
   // uses the shell command for the editor, so put that here.
-  defaultEditor: "code"
+  defaultEditor: "code",
+  // where the wsData.json is located
+  wsDataPath: process.env.HOME + "/repos/wspace/wsData.json"
 }
 
 export default config

@@ -1,14 +1,14 @@
 #! /usr/bin/env node
 
 import { ls, openEditor } from "./utils.js";
-import { getAllWorkSpaces } from "./generateList.js";
+import { getAllWorkSpaces, pushWsToJSON } from "./generateList.js";
 import config from "../config.js";
 
 import Yargs from "yargs";
 
 const argv = Yargs(process.argv.slice(2))
   .usage('Usage: $0 <command> [options]')
-  .command("ls", "list all worplaces", ls())
+  .command("ls", "list all worplaces",() => ls())
   .demandCommand()
   .example('$0 cool-project', 'Open workspace for "cool-project"')
   .boolean('b')
@@ -18,6 +18,11 @@ const argv = Yargs(process.argv.slice(2))
   .argv;
 
 const wsList = getAllWorkSpaces(config.workspaceDirectories)
+
+if(true){
+console.log("blir kalt")
+  pushWsToJSON()
+}
 
 const ws = wsList.find(ws => ws.workSpace == argv._[0])
 if (ws) {
