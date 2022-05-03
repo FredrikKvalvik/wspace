@@ -1,6 +1,7 @@
 #! /usr/bin/env node
 
-import { getAllWorkSpaces, ls, openEditor } from "./utils.js";
+import { ls, openEditor } from "./utils.js";
+import { getAllWorkSpaces } from "./generateList.js";
 import config from "../config.js";
 
 import Yargs from "yargs";

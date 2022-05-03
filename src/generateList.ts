@@ -6,18 +6,16 @@ interface workspace {
   workSpace: String;
 }
 
-type wsList = [
-  workspace
-]
+type wsList = Array<workspace>
 
-const getWorkSpaces = function (dirPath, workSpaces:wsList|[] = [], currentFolder = null) {
+export const getWorkSpaces = function (dirPath, workSpaces:wsList|[] = [], currentFolder = null) {
   const files = fs.readdirSync(dirPath).filter(file => file !== "node_modules")
 
-  let workSpacesList = workSpaces
+  const workSpacesList:wsList = workSpaces
   if (files.includes("package.json" || "composer.json" || ".wspace")) {
     workSpacesList.push({
       path: dirPath,
-      workSpace: currentFolder
+      workSpace: currentFolder,
     })
   } else {
     files.forEach((file) => {
@@ -36,5 +34,5 @@ export const getAllWorkSpaces = wsList => {
 }
 
 const generateJsonList = (wsList:wsList) => {
-
+  console.log("hei")
 }
