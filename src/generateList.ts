@@ -4,13 +4,14 @@ import config from "../config.js";
 interface workspace {
   path: String;
   workSpace: String;
+  links?:Array<String>
 }
 type wsList = Array<workspace>;
 
 export const getWorkSpaces = function (
   dirPath,
   workSpaces: wsList = [],
-  currentFolder = null
+  currentFolder: String | null = null
 ) {
   const files = fs
     .readdirSync(dirPath)
@@ -32,31 +33,50 @@ export const getWorkSpaces = function (
 
   return workSpacesList;
 };
-export const getAllWorkSpaces = (wsList) => {
+export const getAllWorkSpaces = () => {
+  // this allows us to easily have multiple folders the traverse
   const fullList: wsList = [];
-  wsList.forEach((ws) => fullList.push(...getWorkSpaces(ws)));
+  config.workspaceDirectories.forEach((ws) =>
+    fullList.push(...getWorkSpaces(ws))
+  );
   return fullList;
 };
-const getWsData = () => {
-  return JSON.parse(
-    fs.readFileSync(config.wsDataPath, "utf8")
-  )
-}
 
-// class wsData(path) => {
-//   constructor{
-
-//   }
-// }
-
-export const pushWsToJSON = () => {
-  const wsList = getAllWorkSpaces(config.workspaceDirectories);
-  const data = getWsData()
-  wsList.forEach(ws => {
-    // go over every ws and check if it exists in the wsData.js
-  })
+export const getWsData = () => {
+  // find file and read. parse the json into js object
+  // wsData is where the config for all workspaces lives
+  return JSON.parse(fs.readFileSync(config.wsDataPath, "utf8"));
 };
 
-/*
+const writeToDataWs = (data) => {
+  const jsonData = JSON.stringify(data);
+  fs.writeFileSync(config.wsDataPath, jsonData);
+};
 
-*/
+export const pushWsToJSON = () => {
+  const generatedWsList: wsList = getAllWorkSpaces();
+  const data: wsList = getWsData();
+
+  let hasChanged = false;
+  // look for current ws from the generated list
+  // in saved document. If found, do nothing,
+  // if not, add the ws from generated list to data
+  // to be added to document
+  generatedWsList.forEach((foundWs: workspace) => {
+    const isFound = data.find((targetWs: workspace) => {
+      return targetWs?.workSpace === foundWs.workSpace;
+    });
+    // return early if ws already exits in wsData.json
+    if (isFound === undefined) {
+      data.push(foundWs);
+      console.log(`added ${foundWs.workSpace} to list`);
+      hasChanged = true;
+    }
+    // dont change anything because there might be
+    // additional data on the object
+  });
+  writeToDataWs(data);
+  hasChanged
+    ? console.log("list has been updated")
+    : console.log("already up to date");
+};
