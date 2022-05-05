@@ -15,6 +15,7 @@
     "wspace": "./bin/src/index.js"
   },
   "dependencies": {
+    "valid-url": "^1.0.9",
     "yargs": "^17.4.1"
   },
   "devDependencies": {
