@@ -4,7 +4,7 @@ declare global {
   interface workspace {
     path: string;
     workSpace: string;
-    links?: Array<string>;
+    links: string[];
   }
-  type wsList = Array<workspace>;
+  type wsList = workspace[];
 }

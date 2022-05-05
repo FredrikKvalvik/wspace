@@ -3,24 +3,18 @@ import { exec } from "child_process";
 import config from "../config.js";
 import { getWsData } from "./generateList.js";
 
-export const findWorkSpace = (wpList, wpName) => {
-  return wpList.find((ws) => ws.workPlace == wpName);
+export const findWorkSpace = (wpList, wpName) : workspace => {
+  return wpList.find((ws : workspace) => ws.workSpace == wpName);
 };
 
 export const findByIndex = (index : number):workspace => {
   const wsData = getWsData()
   return wsData[index]
 }
-
-export const validateUrl = (url): Boolean => {
-  let isValidUrl;
-  try {
-    isValidUrl = new Boolean(new URL(url));
-  } catch (err) {
-    isValidUrl = false;
-  }
-  return isValidUrl;
-};
+export const findByName = (name : string):workspace => {
+const wsData = getWsData()
+return findWorkSpace(wsData, name)
+}
 
 export const openEditor = (path : string) => {
   exec(`${config.defaultEditor} ${path}`);

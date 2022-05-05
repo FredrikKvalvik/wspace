@@ -1,11 +1,11 @@
 import * as fs from "fs";
 import config from "../config.js";
 
-export const getWorkSpaces = function (
+export const getWorkSpaces = (
   dirPath,
   workSpaces: wsList = [],
   currentFolder: string | null = null
-) {
+) : wsList => {
   const files = fs
     .readdirSync(dirPath)
     .filter((file) => file !== "node_modules");
@@ -15,6 +15,7 @@ export const getWorkSpaces = function (
     workSpacesList.push({
       path: dirPath,
       workSpace: currentFolder,
+      links: []
     });
   } else {
     files.forEach((file) => {
@@ -26,7 +27,7 @@ export const getWorkSpaces = function (
 
   return workSpacesList;
 };
-export const getAllWorkSpaces = () => {
+export const getAllWorkSpaces = () : wsList => {
   // this allows us to easily have multiple folders the traverse
   const fullList: wsList = [];
   config.workspaceDirectories.forEach((ws) =>
@@ -35,13 +36,13 @@ export const getAllWorkSpaces = () => {
   return fullList;
 };
 
-export const getWsData = () => {
+export const getWsData = () : wsList => {
   // find file and read. parse the json into js object
   // wsData is where the config for all workspaces lives
   return JSON.parse(fs.readFileSync(config.wsDataPath, "utf8"));
 };
 
-const writeToDataWs = (data) => {
+export const writeToDataWs = (data) => {
   const jsonData = JSON.stringify(data);
   fs.writeFileSync(config.wsDataPath, jsonData);
 };
