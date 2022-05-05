@@ -1,13 +1,6 @@
 import * as fs from "fs";
 import config from "../config.js";
 
-interface workspace {
-  path: String;
-  workSpace: String;
-  links?:Array<String>
-}
-type wsList = Array<workspace>;
-
 export const getWorkSpaces = function (
   dirPath,
   workSpaces: wsList = [],
