@@ -70,7 +70,4 @@ export const updateList = () => {
     // additional data on the object
   });
   writeToDataWs(data);
-  hasChanged
-    ? console.log("list has been updated")
-    : console.log("already up to date");
 };

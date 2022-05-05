@@ -28,9 +28,11 @@ const argv = Yargs(process.argv.slice(2))
     'add the links to project so they open when you open cool-project workspace"'
   )
   .boolean("a")
-  .describe("a", "add links to the project")
+  .describe("a", "wspace <workspace> -a url1 url2... \nAdds links to workspace")
+  .boolean("r")
+  .describe("r", "wspace <workspace> -r url1 url2... \nremoves links to workspace")
   .boolean("b")
-  .describe("b", "opens saved urls for the selected ws")
+  .describe("b", "wspace <workspace> -b \nopens saved links for the selected workspace")
   .help("h")
   .alias("h", "help").argv;
 
@@ -62,7 +64,11 @@ if (targetWs === undefined) {
 
 // we now know that we have found a workspace
 
-if (argv.a) {
+if(argv.a && argv.r){
+  console.log("one flag at a time plz")
+}
+
+if (argv.a || argv.r) {
   //find and validate links
   const links = argv._.slice(1);
   const validLinks = validateUrlList(links);
@@ -76,15 +82,16 @@ if (argv.a) {
     console.log("no valid urls");
     process.exit(0);
   }
-  const updatedLinks: string[] = validLinks.reduce((list, link) => {
-    if (list.includes(link)) {
-      console.log(link, " is already in the list");
-      return list;
-    } else {
-      console.log(`added ${link} to list`);
-      return [...list, link];
-    }
-  }, wsData[targetIndex].links);
+
+    const updatedLinks: string[] = validLinks.reduce((list, link) => {
+      if (list.includes(link)) {
+        console.log(link, " is already in the list");
+        return list;
+      } else {
+        console.log(`added ${link} to list`);
+        return [...list, link];
+      }
+    }, wsData[targetIndex].links);
 
   wsData[targetIndex].links = updatedLinks;
   writeToDataWs(wsData);
@@ -93,6 +100,15 @@ if (argv.a) {
 }
 
 openEditor(targetWs.path);
+console.log("project is at:\n",targetWs.path)
 if (argv.b) {
   openUrls(targetWs.links);
 }
+
+/* 
+Dette må gjøres:
+  - gi mulighet til å fjerne lenker fra listen.
+  - viser hva lenker som hører til en ws
+    - det kan vel gjøres med et -l flagg når man kaller på en ws
+  - på sikt, rydde i koden
+*/
