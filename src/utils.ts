@@ -7,6 +7,11 @@ export const findWorkSpace = (wpList, wpName) => {
   return wpList.find((ws) => ws.workPlace == wpName);
 };
 
+export const findByIndex = (index : number):workspace => {
+  const wsData = getWsData()
+  return wsData[index]
+}
+
 export const validateUrl = (url): Boolean => {
   let isValidUrl;
   try {
@@ -17,7 +22,7 @@ export const validateUrl = (url): Boolean => {
   return isValidUrl;
 };
 
-export const openEditor = (path) => {
+export const openEditor = (path : string) => {
   exec(`${config.defaultEditor} ${path}`);
 };
 

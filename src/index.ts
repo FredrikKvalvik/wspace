@@ -1,6 +1,6 @@
 #! /usr/bin/env node
 
-import { ls, openEditor } from "./utils.js";
+import { ls, findByIndex, openEditor } from "./utils.js";
 import { getAllWorkSpaces, pushWsToJSON } from "./generateList.js";
 import config from "../config.js";
 
@@ -8,7 +8,7 @@ import Yargs from "yargs";
 
 const argv = Yargs(process.argv.slice(2))
   .usage("Usage: $0 <command> [options]")
-  .command("ls", "list all worplaces", () => ls())
+  .command("ls", "list all workspaces", () => ls())
   .command("update", "update ws list", () => pushWsToJSON())
   .demandCommand()
   .example("$0 cool-project", 'Open workspace for "cool-project"')
@@ -17,14 +17,17 @@ const argv = Yargs(process.argv.slice(2))
   .help("h")
   .alias("h", "help").argv;
 
-const wsList = getAllWorkSpaces();
-
-
-const ws = wsList.find((ws) => ws.workSpace == argv._[0]);
-if (ws) {
-  openEditor(ws.path);
-  process.exit(0);
+if(argv._[0] === ("ls" || "update")){
+  process.exit(0)
 }
+
+if(typeof argv._[0] === "number"){
+  const ws = findByIndex(argv._[0])
+  openEditor(ws.path)
+}
+
+
+
 // else{
 //   console.log(`oof, could not find workspace '${argv._[0]}'`)
 //   process.exit(0)
