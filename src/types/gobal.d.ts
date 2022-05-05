@@ -2,9 +2,9 @@ export {};
 
 declare global {
   interface workspace {
-    path: String;
-    workSpace: String;
-    links?: Array<String>;
+    path: string;
+    workSpace: string;
+    links?: Array<string>;
   }
   type wsList = Array<workspace>;
 }

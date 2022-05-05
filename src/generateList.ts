@@ -4,7 +4,7 @@ import config from "../config.js";
 export const getWorkSpaces = function (
   dirPath,
   workSpaces: wsList = [],
-  currentFolder: String | null = null
+  currentFolder: string | null = null
 ) {
   const files = fs
     .readdirSync(dirPath)

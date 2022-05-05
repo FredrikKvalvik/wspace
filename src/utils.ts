@@ -22,7 +22,7 @@ export const openEditor = (path) => {
 };
 
 export const ls = () => {
-  const wsList = getWsData();
+  const wsList:wsList = getWsData();
   wsList.forEach((ws, i) => {
     console.log(`${i} ${ws.workSpace}`);
   });
