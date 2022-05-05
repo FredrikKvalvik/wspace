@@ -47,7 +47,7 @@ export const writeToDataWs = (data) => {
   fs.writeFileSync(config.wsDataPath, jsonData);
 };
 
-export const pushWsToJSON = () => {
+export const updateList = () => {
   const generatedWsList: wsList = getAllWorkSpaces();
   const data: wsList = getWsData();
 

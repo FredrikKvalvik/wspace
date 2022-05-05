@@ -4,7 +4,7 @@ import { ls, findByIndex, findByName, openEditor } from "./utils.js";
 import {
   getAllWorkSpaces,
   getWsData,
-  pushWsToJSON,
+  updateList,
   writeToDataWs,
 } from "./generateList.js";
 import config from "../config.js";
@@ -13,18 +13,14 @@ import { openUrls, validateUrlList } from "./url.js";
 import Yargs from "yargs";
 
 const handleLs = () => {
+  updateList();
   ls();
-  process.exit(0);
-};
-const handleUpdate = () => {
-  pushWsToJSON();
   process.exit(0);
 };
 
 const argv = Yargs(process.argv.slice(2))
   .usage("Usage: $0 <command> [options]")
   .command("ls", "list all workspaces", handleLs)
-  .command("update", "update ws list", handleUpdate)
   .demandCommand()
   .example("$0 cool-project", 'Open workspace for "cool-project"')
   .example(
