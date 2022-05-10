@@ -1,6 +1,6 @@
 #! /usr/bin/env node
 
-import { ls, findByIndex, findByName, openEditor } from "./utils.js";
+import { ls, findByIndex, findByName, openEditor, isMultipleFlags } from "./utils.js";
 import {
   getAllWorkSpaces,
   getWsData,
@@ -8,7 +8,7 @@ import {
   writeToDataWs,
 } from "./generateList.js";
 import config from "../config.js";
-import { openUrls, validateUrlList } from "./url.js";
+import { openUrls, updateUrlsHelper } from "./url.js";
 
 import Yargs from "yargs";
 
@@ -19,7 +19,11 @@ const handleLs = () => {
 };
 
 const argv = Yargs(process.argv.slice(2))
-  .usage("Usage: $0 <command> [options]")
+  .usage("Usage: $0 <workspace> [options]")
+  .usage("Usage: $0 <command>")
+  // .command("$0 [workspace]", "open a workspace", () => {
+  //   console.log("funker det?")
+  // })
   .command("ls", "list all workspaces", handleLs)
   .demandCommand()
   .example("$0 cool-project", 'Open workspace for "cool-project"')
@@ -30,12 +34,21 @@ const argv = Yargs(process.argv.slice(2))
   .boolean("a")
   .describe("a", "wspace <workspace> -a url1 url2... \nAdds links to workspace")
   .boolean("r")
+  // r has not been implemented yet. just a placeholder
   .describe("r", "wspace <workspace> -r url1 url2... \nremoves links to workspace")
   .boolean("b")
   .describe("b", "wspace <workspace> -b \nopens saved links for the selected workspace")
+  // has not been implemented yet. 
+  .boolean("i")
+  .describe("i", "wspace <workspace> -i \nshows all data saved for <workspace>")
   .help("h")
   .alias("h", "help").argv;
 
+// stop execution if multiple flags are used
+if(isMultipleFlags(argv)){
+  console.log("one flag at a time plz")
+  process.exit(0)
+}
 // this will either be a workspace or undefined
 let targetWs;
 
@@ -61,42 +74,14 @@ if (targetWs === undefined) {
   console.log("could not find ws at all");
   process.exit(0);
 }
-
 // we now know that we have found a workspace
 
-if(argv.a && argv.r){
-  console.log("one flag at a time plz")
+// If one of these flags are called, do operation and exit.
+if (argv.a) {
+updateUrlsHelper({argv, targetWs}, "add")
 }
-
-if (argv.a || argv.r) {
-  //find and validate links
-  const links = argv._.slice(1);
-  const validLinks = validateUrlList(links);
-  // we mutate this object and then write it to wsData.json
-  const wsData = getWsData();
-  const targetIndex: number = wsData.findIndex(
-    (obj): boolean => obj.workSpace === targetWs.workSpace
-  );
-
-  if (!validLinks) {
-    console.log("no valid urls");
-    process.exit(0);
-  }
-
-    const updatedLinks: string[] = validLinks.reduce((list, link) => {
-      if (list.includes(link)) {
-        console.log(link, " is already in the list");
-        return list;
-      } else {
-        console.log(`added ${link} to list`);
-        return [...list, link];
-      }
-    }, wsData[targetIndex].links);
-
-  wsData[targetIndex].links = updatedLinks;
-  writeToDataWs(wsData);
-
-  process.exit(0)
+if(argv.r){
+  updateUrlsHelper({argv, targetWs}, "remove")
 }
 
 openEditor(targetWs.path);
