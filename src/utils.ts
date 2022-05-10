@@ -28,10 +28,12 @@ export const ls = () => {
 };
 
 export const isMultipleFlags = (obj:argv):boolean => {
-  delete obj._
-  delete obj.$0
+  // do this fancy thing to create a new object instead of a reference 
+  const controlObj = {...obj}
+  delete controlObj._
+  delete controlObj.$0
   let count:number = 0
-  for(const arg in obj){
+  for(const arg in controlObj){
     if(arg){
       count++
     }

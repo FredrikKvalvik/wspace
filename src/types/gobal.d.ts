@@ -7,4 +7,9 @@ declare global {
     links: string[];
   }
   type wsList = workspace[];
+
+  interface argv {
+    _:string[],
+    [key:string]: boolean | string[] | string
+  }
 }
