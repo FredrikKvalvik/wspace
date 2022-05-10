@@ -26,3 +26,16 @@ export const ls = () => {
     console.log(`${i} ${ws.workSpace}`);
   });
 };
+
+export const isMultipleFlags = (obj:argv):boolean => {
+  delete obj._
+  delete obj.$0
+  let count:number = 0
+  for(const arg in obj){
+    if(arg){
+      count++
+    }
+  }
+  return Boolean(count > 1)
+}
+
