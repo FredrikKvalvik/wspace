@@ -37,6 +37,11 @@ export const getAllWorkSpaces = () : wsList => {
 };
 
 export const getWsData = () : wsList => {
+  // create a wsData if one does not exist
+  const checkWs = fs.existsSync(config.wsDataPath)
+  if(!checkWs){
+    fs.writeFileSync(config.wsDataPath, JSON.stringify([]))
+  }
   // find file and read. parse the json into js object
   // wsData is where the config for all workspaces lives
   return JSON.parse(fs.readFileSync(config.wsDataPath, "utf8"));
