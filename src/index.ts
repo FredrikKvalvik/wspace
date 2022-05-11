@@ -60,7 +60,6 @@ if (typeof argv._[0] === "number") {
   }
   targetWs = ws;
 }
-
 if (typeof argv._[0] === "string") {
   const ws = findByName(argv._[0]);
   if (ws === undefined) {
@@ -70,7 +69,7 @@ if (typeof argv._[0] === "string") {
   targetWs = ws;
 }
 // one last check to try to cover unknown edge cases
-if (targetWs === undefined) {
+if (!targetWs) {
   console.log("could not find ws at all");
   process.exit(0);
 }
