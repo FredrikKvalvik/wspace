@@ -41,7 +41,7 @@ export const openUrls = (links: string[]) => {
   exec(`open ${linkString}`);
 };
 
-
+// used as filter for updateUrlsHelper
 const addUrls = ({ validLinks, currentList }) => {
   return validLinks.reduce((list, link) => {
     if (list.includes(link)) {
@@ -54,13 +54,18 @@ const addUrls = ({ validLinks, currentList }) => {
   }, currentList)
 };
 
+// used as filter for updateUrlsHelper
 const removeUrls = ({
   validLinks,
-  currentLinks,
+  currentList,
 }) => {
-    return currentLinks.filter((url) => {
+    return currentList.filter((url) => {
       // return false if list includes link
-      !validLinks.includes(url)
+      if(validLinks.includes(url)){
+        console.log(`${url} has been removed`)
+        return false
+      }
+      return true
     });
 }
 
@@ -78,13 +83,12 @@ export const updateUrlsHelper = ({ targetWs, argv }:urlListAndWs, mode: mode) =>
     console.log("no valid urls");
     process.exit(0);
   }
-  console.log(wsData[targetIndex])
 
   let updatedLinks
   if(mode === "add"){
     updatedLinks = addUrls({ validLinks, currentList: wsData[targetIndex].links});
   } else if(mode === "remove"){
-    updatedLinks = removeUrls({validLinks, currentLinks:wsData[targetIndex].links});
+    updatedLinks = removeUrls({validLinks, currentList: wsData[targetIndex].links});
   }
 
   wsData[targetIndex].links = updatedLinks;

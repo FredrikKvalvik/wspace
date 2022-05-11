@@ -1,6 +1,12 @@
 #! /usr/bin/env node
 
-import { ls, findByIndex, findByName, openEditor, isMultipleFlags } from "./utils.js";
+import {
+  ls,
+  findByIndex,
+  findByName,
+  openEditor,
+  isMultipleFlags,
+} from "./utils.js";
 import {
   getAllWorkSpaces,
   getWsData,
@@ -21,9 +27,6 @@ const handleLs = () => {
 const argv = Yargs(process.argv.slice(2))
   .usage("Usage: $0 <workspace> [options]")
   .usage("Usage: $0 <command>")
-  // .command("$0 [workspace]", "open a workspace", () => {
-  //   console.log("funker det?")
-  // })
   .command("ls", "list all workspaces", handleLs)
   .demandCommand()
   .example("$0 cool-project", 'Open workspace for "cool-project"')
@@ -35,19 +38,24 @@ const argv = Yargs(process.argv.slice(2))
   .describe("a", "wspace <workspace> -a url1 url2... \nAdds links to workspace")
   .boolean("r")
   // r has not been implemented yet. just a placeholder
-  .describe("r", "wspace <workspace> -r url1 url2... \nremoves links to workspace")
+  .describe(
+    "r",
+    "wspace <workspace> -r url1 url2... \nremoves links to workspace"
+  )
   .boolean("b")
-  .describe("b", "wspace <workspace> -b \nopens saved links for the selected workspace")
-  // has not been implemented yet. 
+  .describe(
+    "b",
+    "wspace <workspace> -b \nopens saved links for the selected workspace"
+  )
   .boolean("i")
   .describe("i", "wspace <workspace> -i \nshows all data saved for <workspace>")
   .help("h")
   .alias("h", "help").argv;
 
 // stop execution if multiple flags are used
-if(isMultipleFlags(argv)){
-  console.log("one flag at a time plz")
-  process.exit(0)
+if (isMultipleFlags(argv)) {
+  console.log("one flag at a time plz");
+  process.exit(0);
 }
 // this will either be a workspace or undefined
 let targetWs;
@@ -73,18 +81,34 @@ if (!targetWs) {
   console.log("could not find ws at all");
   process.exit(0);
 }
+
 // we now know that we have found a workspace
+
+if (argv.i) {
+  const { workSpace, path, links } = targetWs;
+  console.log(`
+Workspace name:
+- ${workSpace}
+Path:
+- ${path}`
+  );
+  if (links.length) {
+    console.log("Links:");
+    links.forEach((link) => console.log("-", link));
+  }
+  process.exit(0);
+}
 
 // If one of these flags are called, do operation and exit.
 if (argv.a) {
-updateUrlsHelper({argv, targetWs}, "add")
+  updateUrlsHelper({ argv, targetWs }, "add");
 }
-if(argv.r){
-  updateUrlsHelper({argv, targetWs}, "remove")
+if (argv.r) {
+  updateUrlsHelper({ argv, targetWs }, "remove");
 }
 
 openEditor(targetWs.path);
-console.log("project is at:\n",targetWs.path)
+console.log("project is at:\n", targetWs.path);
 if (argv.b) {
   openUrls(targetWs.links);
 }
