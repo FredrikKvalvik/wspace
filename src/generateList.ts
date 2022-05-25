@@ -48,7 +48,7 @@ export const getWsData = () : wsList => {
 };
 
 export const writeToDataWs = (data) => {
-  const jsonData = JSON.stringify(data);
+  const jsonData = JSON.stringify(data, null, 2);
   fs.writeFileSync(config.wsDataPath, jsonData);
 };
 
